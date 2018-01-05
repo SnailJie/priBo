@@ -73,7 +73,7 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
                        method="L-BFGS-B")
         
         # Store it if better than previous minimum(maximum).
-        if max_acq is None or -res.fun[0] >= max_acq:
+        if max_acq is None or -res.fun[0] <= max_acq:
             x_max = np.around(res.x)
             max_acq = -res.fun[0]
             
