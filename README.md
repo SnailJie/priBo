@@ -79,7 +79,8 @@ commands to get a copy from Github and install all dependencies:
 * http://www.gaussianprocess.org/gpml/
 * https://www.youtube.com/watch?v=vz3D36VXefI&index=10&list=PLE6Wd9FR--EdyJ5lbFl8UuGjecvVw66F6
 
-#运行
+# 运行
+
 1.进入项目根目录下，python setup.py install 安装
 2.运行 jupyter notebook 。进入操作界面
 3.点击查看priBo.ipynb 运行
