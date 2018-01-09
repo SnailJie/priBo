@@ -241,14 +241,14 @@ class BayesianOptimization(object):
             if self.verbose:
                 self.plog.print_header()
             self.init(init_points)
-        print("当前y_max为：\n")    
+        print("y_max is：\n")    
         y_max = self.space.Y.max()
         print(y_max)    
         # Set parameters if any was passed
         self.gp.set_params(**gp_params)
 
         # Find unique rows of X to avoid GP from breaking
-        print("X,和Y")
+        
         print(self.space.X)
         print(self.space.Y)
         self.gp.fit(self.space.X, self.space.Y)
@@ -260,7 +260,7 @@ class BayesianOptimization(object):
                         bounds=self.space.bounds,
                         random_state=self.random_state,
                         **self._acqkw)
-        print("x_max为")
+        print("x_max is")
         print(x_max)
         # Print new header
         if self.verbose:
