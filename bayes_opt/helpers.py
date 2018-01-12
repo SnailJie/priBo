@@ -13,7 +13,20 @@ def to_int_ndarray(x):
         
     return np.array(templist)
 
-
+def get_lcm(x,y):
+        if x > y:
+           greater = x
+        else:
+            greater=y
+        
+        while(True):
+           if((greater % x == 0) and (greater % y == 0)):
+               lcm = greater
+               break
+           greater += 1
+           
+        return lcm
+    
 def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     """
     A function to find the maximum of the acquisition function

@@ -83,7 +83,7 @@ class BayesianOptimization(object):
         # points from self.explore method.
         rand_points = self.space.random_points(init_points)
         self.init_points.extend(rand_points)
-
+        
         # Evaluate target function at all initialization points
         for x in self.init_points:
             y = self._observe_point(x)

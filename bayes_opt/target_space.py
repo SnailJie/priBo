@@ -1,6 +1,9 @@
 from __future__ import print_function, division
 import numpy as np
-from .helpers import ensure_rng, unique_rows
+from .helpers import ensure_rng, unique_rows, get_lcm
+from numpy.core.defchararray import greater
+ 
+
 
 
 def _hashable(x):
@@ -128,6 +131,7 @@ class TargetSpace(object):
             target function value.
         """
         x = np.asarray(x).ravel()
+         
         assert x.size == self.dim, 'x must have the same dimensions'
 
         if x in self:
@@ -223,6 +227,12 @@ class TargetSpace(object):
         """ Number of allocated rows """
         return 0 if self._Xarr is None else self._Xarr.shape[0]
 
+    #def is_valid(vm):
+    #    print
+    
+    
+     
+   
     def random_points(self, num):
         """
         Creates random points within the bounds of the space
@@ -248,11 +258,35 @@ class TargetSpace(object):
                [ 60.67357423,   0.64589411]])
         """
         # TODO: support integer, category, and basic scipy.optimize constraints
-        data = np.empty((num, self.dim))
-        for col, (lower, upper) in enumerate(self.bounds):
-            data.T[col] = self.random_state.randint(lower, upper, size=num)
-        return data
-
+        #data = np.empty((num, self.dim))
+        #print("进入random_points\n")
+        #print(type(self.bounds))
+        #print(self.bounds)
+        
+        random_list = list()
+        i=0
+        while i < num:
+            data = np.empty((1, self.dim))
+            for col, (lower, upper) in enumerate(self.bounds):
+              data.T[col] = self.random_state.randint(lower, upper, size=1)
+              
+            data = np.asarray(data).ravel()
+            #print("随机生成的数据\n")
+            #print(data)
+            params = dict(zip(self.keys, data))
+            max_lcm = get_lcm(params['cpu_count'],params['ram'])
+            #print("lcm is:"+str(max_lcm))
+            if(max_lcm >=4 and max_lcm <=16):
+                random_list.append(data.tolist())
+                i+=1
+                #print("add one")
+                
+        #for col, (lower, upper) in enumerate(self.bounds):
+         #     data.T[col] = self.random_state.randint(lower, upper, size=num)
+        
+        return np.array(random_list)
+    
+    
     def max_point(self):
         """
         Return the current parameters that best maximize target function with
