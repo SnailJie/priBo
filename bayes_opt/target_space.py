@@ -250,7 +250,7 @@ class TargetSpace(object):
         params = dict(zip(self.keys, data))
         max_lcm = get_lcm(params['cpu_count'],params['ram'])
         if(max_lcm <4 or max_lcm >16):
-            print("Validata configuration list wrong，CPU: "+str(params['cpu_count'])+" ram: "+str(params['ram']))
+            print("Validata configuration list wrong,CPU: "+str(params['cpu_count'])+" ram: "+str(params['ram']))
             return False
         return True
      
