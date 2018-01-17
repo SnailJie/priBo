@@ -237,7 +237,7 @@ class BayesianOptimization(object):
         self.util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
 
         # Initialize x, y and find current y_max
-        #TODO: 确认初始化点在范围内
+        
         if not self.initialized:
             if self.verbose:
                 self.plog.print_header()

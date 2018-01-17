@@ -281,9 +281,7 @@ class TargetSpace(object):
         """
         # TODO: support integer, category, and basic scipy.optimize constraints
         #data = np.empty((num, self.dim))
-        #print("进入random_points\n")
-        #print(type(self.bounds))
-        #print(self.bounds)
+         
         
         random_list = list()
         i=0
