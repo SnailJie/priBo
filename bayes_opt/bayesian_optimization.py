@@ -231,10 +231,10 @@ class BayesianOptimization(object):
         >>> bo.maximize(init_points=2, n_iter=25, acq="ucb", kappa=1)
         """
         # Reset timer
-        print("---------------concurrent values start------------------")
+        print("---------------current values start------------------")
         print(self.space.X)
         print(self.space.Y)
-        print("---------------concurrent values end------------------")
+        print("---------------current values end------------------")
         self.plog.reset_timer()
 
         # Set acquisition function
