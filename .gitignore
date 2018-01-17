@@ -19,3 +19,6 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+
+#test file
+priBo.ipynb

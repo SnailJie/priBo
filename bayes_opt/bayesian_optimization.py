@@ -237,31 +237,30 @@ class BayesianOptimization(object):
         self.util = UtilityFunction(kind=acq, kappa=kappa, xi=xi)
 
         # Initialize x, y and find current y_max
+        #TODO: 确认初始化点在范围内
         if not self.initialized:
             if self.verbose:
                 self.plog.print_header()
             self.init(init_points)
-        print("y_max is：\n")    
         y_max = self.space.Y.max()
-        print(y_max)    
+        
         # Set parameters if any was passed
         self.gp.set_params(**gp_params)
 
         # Find unique rows of X to avoid GP from breaking
-        
-        print(self.space.X)
-        print(self.space.Y)
         self.gp.fit(self.space.X, self.space.Y)
 
         # Finding argmax of the acquisition function.
+     
         x_max = acq_max(ac=self.util.utility,
                         gp=self.gp,
                         y_max=y_max,
                         bounds=self.space.bounds,
                         random_state=self.random_state,
                         **self._acqkw)
-        print("x_max is")
-        print(x_max)
+         
+        if not self.space.validate_conf(x_max) :
+            x_max = self.space.rechoose_conf(x_max)
         # Print new header
         if self.verbose:
             self.plog.print_header(initialization=False)
@@ -281,7 +280,6 @@ class BayesianOptimization(object):
 
             # Append most recently generated values to X and Y arrays
             y = self.space.observe_point(x_max)
-            print(y)
             if self.verbose:
                 self.plog.print_step(x_max, y, pwarning)
 
@@ -304,7 +302,8 @@ class BayesianOptimization(object):
                             bounds=self.space.bounds,
                             random_state=self.random_state,
                             **self._acqkw)
-
+            if not self.space.validate_conf(x_max) :
+                x_max = self.space.rechoose_conf(x_max)
             # Keep track of total number of iterations
             self.i += 1
 

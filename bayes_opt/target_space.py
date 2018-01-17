@@ -48,6 +48,8 @@ class TargetSpace(object):
 
         # Get the name of the parameters
         self.keys = list(pbounds.keys())
+        print("keys \n")
+        print(self.keys)
         # Create an array with parameters bounds
         self.bounds = np.array(list(pbounds.values()), dtype=np.int)
         # Find number of parameters
@@ -131,7 +133,6 @@ class TargetSpace(object):
             target function value.
         """
         x = np.asarray(x).ravel()
-         
         assert x.size == self.dim, 'x must have the same dimensions'
 
         if x in self:
@@ -230,7 +231,28 @@ class TargetSpace(object):
     #def is_valid(vm):
     #    print
     
-    
+    def rechoose_conf(self,data):
+        print("Please modify the value of cpu_count and ram\n")
+        print(data)
+        params = dict(zip(self.keys, data))
+        print("CPU:"+str(params['cpu_count']))
+        new_cpu=input();
+        params['cpu_count']=int(new_cpu)
+        print("RAM:"+str(params['ram']))
+        new_ram=input();
+        params['ram']=int(new_ram)
+        
+        result = np.array(list(params.values()))
+        return result
+        
+        
+    def validate_conf(self,data):
+        params = dict(zip(self.keys, data))
+        max_lcm = get_lcm(params['cpu_count'],params['ram'])
+        if(max_lcm <4 or max_lcm >16):
+            print("Validata configuration list wrong，CPU: "+str(params['cpu_count'])+" ram: "+str(params['ram']))
+            return False
+        return True
      
    
     def random_points(self, num):
@@ -271,19 +293,9 @@ class TargetSpace(object):
               data.T[col] = self.random_state.randint(lower, upper, size=1)
               
             data = np.asarray(data).ravel()
-            #print("随机生成的数据\n")
-            #print(data)
-            params = dict(zip(self.keys, data))
-            max_lcm = get_lcm(params['cpu_count'],params['ram'])
-            #print("lcm is:"+str(max_lcm))
-            if(max_lcm >=4 and max_lcm <=16):
+            if(self.validate_conf(data)):
                 random_list.append(data.tolist())
                 i+=1
-                #print("add one")
-                
-        #for col, (lower, upper) in enumerate(self.bounds):
-         #     data.T[col] = self.random_state.randint(lower, upper, size=num)
-        
         return np.array(random_list)
     
     

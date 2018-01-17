@@ -67,12 +67,10 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     
     x_tries =  np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_warmup, bounds.shape[0])))
-    
     ys = ac(x_tries, gp=gp, y_max=y_max)
     
     x_max = x_tries[ys.argmax()]
     max_acq = ys.max()
-    
 
     # Explore the parameter space more throughly
     x_seeds = np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
@@ -93,6 +91,7 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
 
     # Clip output to make sure it lies within the bounds. Due to floating
     # point technicalities this is not always the case.
+    #TODO:由于选出的点不一定能使用，因此需要进行再处理。这里认为相似的配置，运行效果相差不大。根据任务类型保留最需要的资源
     return np.clip(x_max, bounds[:, 0], bounds[:, 1])
 
 
