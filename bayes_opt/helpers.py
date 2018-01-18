@@ -4,6 +4,7 @@ import numpy as np
 from datetime import datetime
 from scipy.stats import norm
 from scipy.optimize import minimize
+import heapq as hp
 
 
 def to_int_ndarray(x):
@@ -13,6 +14,26 @@ def to_int_ndarray(x):
         
     return np.array(templist)
 
+def better_conf(x,y):
+    print("Please compare these two configuration, if (1) better than (2),please input 1.Otherwise input 0\n")
+    print("(1)\n")
+    print(x)
+    print("(2)\n")
+    print(y)
+    result = input()
+    return True if result == '0' else False
+    
+    
+
+def config_filter(x,y):
+    largest_index = hp.nlargest(10,range(len(y)),y.take)
+    x_current = x[largest_index[0]]
+    for i in range(1,10):
+        if better_conf(x_current,x[largest_index[i]]) :
+            x_current=x[largest_index[i]]
+    return x_current
+    
+    
 def get_lcm(x,y):
         if x > y:
            greater = x
@@ -68,8 +89,9 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     x_tries =  np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_warmup, bounds.shape[0])))
     ys = ac(x_tries, gp=gp, y_max=y_max)
-    
-    x_max = x_tries[ys.argmax()]
+    #TODO：查找前10个点，根据规则进行排序【这里引入超参，需要进行调整，到底要找前几个】
+    x_max = config_filter(x_tries,ys)
+    #x_max = x_tries[ys.argmax()]
     max_acq = ys.max()
 
     # Explore the parameter space more throughly
@@ -278,3 +300,4 @@ class PrintLog(object):
 
     def print_summary(self):
         pass
+

@@ -289,7 +289,7 @@ class BayesianOptimization(object):
 
             # Updating the GP.
             self.gp.fit(self.space.X, self.space.Y)
-
+ 
             # Update the best params seen so far
             self.res['max'] = self.space.max_point()
             self.res['all']['values'].append(y)
