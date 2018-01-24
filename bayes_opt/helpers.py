@@ -5,6 +5,7 @@ from datetime import datetime
 from scipy.stats import norm
 from scipy.optimize import minimize
 import heapq as hp
+from heapq import heappush, heappop
 
 
 def to_int_ndarray(x):
@@ -13,7 +14,7 @@ def to_int_ndarray(x):
         templist.append(round(temp))
         
     return np.array(templist)
-
+ 
 def better_conf(x,y):
     print("Please compare these two configuration, if (1) better than (2),please input 1.Otherwise input 0\n")
     print("(1)\n")
@@ -21,17 +22,32 @@ def better_conf(x,y):
     print("(2)\n")
     print(y)
     result = input()
-    return True if result == '0' else False
+    return True if result == '1' else False
     
     
 
 def config_filter(x,y):
+    """
+     This function is design for prior knowledge input. You can modify this function for specify prior strategy
+    """
+    print("====================config_filter=================")
     largest_index = hp.nlargest(10,range(len(y)),y.take)
+    result = {}
+    for i in range(0,10):
+        result[y[largest_index[i]]] = x[largest_index[i]]
+    print("====================config_filter  end  =================")
+    return result
+    
+    """
     x_current = x[largest_index[0]]
+    index = 0
     for i in range(1,10):
         if better_conf(x_current,x[largest_index[i]]) :
             x_current=x[largest_index[i]]
+            index = i
+    print("经过随机选择，选点"+str(index))
     return x_current
+    """
     
     
 def get_lcm(x,y):
@@ -47,6 +63,21 @@ def get_lcm(x,y):
            greater += 1
            
         return lcm
+ 
+def do_filter(xlist):
+    print("传过来做过滤的list")
+    print(xlist)
+    xlist = sorted(xlist.items())
+    result = xlist[0][1]
+    for i in range(len(xlist)-1,0,-1):
+        print("当前result 是：\n")
+        print(result)
+        if i < len(xlist) -10 and i <0:
+            break
+        if better_conf(result, xlist[i][1]):
+            result = xlist[i][1]
+    return result
+        
     
 def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     """
@@ -89,15 +120,21 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     x_tries =  np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_warmup, bounds.shape[0])))
     ys = ac(x_tries, gp=gp, y_max=y_max)
-    #TODO：查找前10个点，根据规则进行排序【这里引入超参，需要进行调整，到底要找前几个】
-    x_max = config_filter(x_tries,ys)
+    #TODO：查找前10个点，根据规则进行排序【这里引入超参，需要进行调整，到底要找前几个】,返回前10个最大的最小堆
+    x_dict= config_filter(x_tries,ys)
+    print("过滤的x——dict是\n")
+    print(x_dict)
     #x_max = x_tries[ys.argmax()]
-    max_acq = ys.max()
+    #max_acq = ys.max()
+    #max_acq = ys[x_index]
+    xitems = x_dict.items()
+    #sorted(xitems)
+    max_acq = sorted(xitems)[0][0]
 
     # Explore the parameter space more throughly
     x_seeds = np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_iter, bounds.shape[0])))
-    
+     
     for x_try in x_seeds:
         # Find the minimum of minus the acquisition function
         res = minimize(lambda x: -ac(x.reshape(1, -1), gp=gp, y_max=y_max),
@@ -107,13 +144,14 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
         
         # Store it if better than previous minimum(maximum).
         if max_acq is None or -res.fun[0] <= max_acq:
-            x_max = np.around(res.x)
+            #x_max = np.around(res.x)
+            x_dict[-res.fun[0]] = x_try 
             max_acq = -res.fun[0]
             
 
     # Clip output to make sure it lies within the bounds. Due to floating
-    # point technicalities this is not always the case.
-    
+    # x_maxdict contains morethan
+    x_max = do_filter(x_dict)
     return np.clip(x_max, bounds[:, 0], bounds[:, 1])
 
 
