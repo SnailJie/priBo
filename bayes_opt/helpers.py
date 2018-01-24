@@ -16,7 +16,7 @@ def to_int_ndarray(x):
     return np.array(templist)
  
 def better_conf(x,y):
-    print("Please compare these two configuration, if (1) better than (2),please input 1.Otherwise input 0\n")
+    print("Please compare these two configuration, if (1) better than (2),please input 1.Otherwise input 2\n")
     print("(1)\n")
     print(x)
     print("(2)\n")
@@ -24,30 +24,16 @@ def better_conf(x,y):
     result = input()
     return True if result == '1' else False
     
-    
 
 def config_filter(x,y):
     """
      This function is design for prior knowledge input. You can modify this function for specify prior strategy
     """
-    print("====================config_filter=================")
     largest_index = hp.nlargest(10,range(len(y)),y.take)
     result = {}
     for i in range(0,10):
         result[y[largest_index[i]]] = x[largest_index[i]]
-    print("====================config_filter  end  =================")
     return result
-    
-    """
-    x_current = x[largest_index[0]]
-    index = 0
-    for i in range(1,10):
-        if better_conf(x_current,x[largest_index[i]]) :
-            x_current=x[largest_index[i]]
-            index = i
-    print("经过随机选择，选点"+str(index))
-    return x_current
-    """
     
     
 def get_lcm(x,y):
@@ -65,16 +51,12 @@ def get_lcm(x,y):
         return lcm
  
 def do_filter(xlist):
-    print("传过来做过滤的list")
-    print(xlist)
     xlist = sorted(xlist.items())
     result = xlist[0][1]
     for i in range(len(xlist)-1,0,-1):
-        print("当前result 是：\n")
-        print(result)
         if i < len(xlist) -10 and i <0:
             break
-        if better_conf(result, xlist[i][1]):
+        if not better_conf(result, xlist[i][1]):
             result = xlist[i][1]
     return result
         
@@ -120,10 +102,7 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     x_tries =  np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_warmup, bounds.shape[0])))
     ys = ac(x_tries, gp=gp, y_max=y_max)
-    #TODO：查找前10个点，根据规则进行排序【这里引入超参，需要进行调整，到底要找前几个】,返回前10个最大的最小堆
     x_dict= config_filter(x_tries,ys)
-    print("过滤的x——dict是\n")
-    print(x_dict)
     #x_max = x_tries[ys.argmax()]
     #max_acq = ys.max()
     #max_acq = ys[x_index]

@@ -255,7 +255,7 @@ class BayesianOptimization(object):
         self.gp.fit(self.space.X, self.space.Y)
 
         # Finding argmax of the acquisition function.
-        #根据产生新点
+       
         x_max = acq_max(ac=self.util.utility,
                         gp=self.gp,
                         y_max=y_max,
