@@ -263,8 +263,13 @@ class BayesianOptimization(object):
                         random_state=self.random_state,
                         **self._acqkw)
          
-        if not self.space.validate_conf(x_max) :
-            x_max = self.space.rechoose_conf(x_max)
+        
+        #---------!!!!!!!!!!-----!!!!!!-----hadoop environment
+        #if not self.space.validate_conf(x_max) :
+        #    x_max = self.space.rechoose_conf(x_max)
+        
+        
+        
         # Print new header
         if self.verbose:
             self.plog.print_header(initialization=False)
@@ -306,8 +311,11 @@ class BayesianOptimization(object):
                             bounds=self.space.bounds,
                             random_state=self.random_state,
                             **self._acqkw)
-            if not self.space.validate_conf(x_max) :
-                x_max = self.space.rechoose_conf(x_max)
+            
+            #-----------!!!!!!!!!----------
+            #if not self.space.validate_conf(x_max) :
+            #   x_max = self.space.rechoose_conf(x_max)
+             
             # Keep track of total number of iterations
             self.i += 1
 
