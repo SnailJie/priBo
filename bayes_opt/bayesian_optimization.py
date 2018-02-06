@@ -81,11 +81,17 @@ class BayesianOptimization(object):
         """
         # Concatenate new random points to possible existing
         # points from self.explore method.
+        
         rand_points = self.space.random_points(init_points)
+        rand_points = self.space.get_new_init(rand_points)
+        
+        print("new rand_points is")
+        print(rand_points)
+        
         self.init_points.extend(rand_points)
         
         # Evaluate target function at all initialization points
-        for x in self.init_points:
+        for x in self.init_points :
             y = self._observe_point(x)
 
         # Add the points from `self.initialize` to the observations

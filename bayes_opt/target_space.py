@@ -254,7 +254,41 @@ class TargetSpace(object):
             return False
         return True
      
-   
+
+    def get_new_init(self,randonpoint):
+        result = list()
+        print("rand_points is")
+        print(randonpoint)
+        for x in randonpoint:
+            params = dict(zip(self.keys, x))
+            print("cpu_count:"+str(params['cpu_count']))
+            new_cpu=input();
+            if new_cpu!="" :
+                params['cpu_count']=int(new_cpu)
+            
+            print("ram:"+str(params['ram']))
+            new_ram=input();
+            if new_ram!="" :
+                 params['ram']=int(new_ram)
+            
+            print("diskType:"+str(params['diskType']))
+            new_diskType=input();
+            if new_diskType!="" :
+                params['diskType']=int(new_diskType)
+            
+            print("netType:"+str(params['netType']))
+            new_netType=input();
+            if new_netType!="" :
+                params['netType']=int(new_netType)
+                
+            print("count:"+str(params['count']))
+            new_count=input();
+            if new_count!="" :
+                params['count']=int(new_count)
+            result.append(list(params.values()))
+       
+        return np.array(result)
+    
     def random_points(self, num):
         """
         Creates random points within the bounds of the space
