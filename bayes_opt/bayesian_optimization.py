@@ -81,11 +81,17 @@ class BayesianOptimization(object):
         """
         # Concatenate new random points to possible existing
         # points from self.explore method.
+        
         rand_points = self.space.random_points(init_points)
+        rand_points = self.space.get_new_init(rand_points)
+        
+        print("new rand_points is")
+        print(rand_points)
+        
         self.init_points.extend(rand_points)
         
         # Evaluate target function at all initialization points
-        for x in self.init_points:
+        for x in self.init_points :
             y = self._observe_point(x)
 
         # Add the points from `self.initialize` to the observations
@@ -263,8 +269,13 @@ class BayesianOptimization(object):
                         random_state=self.random_state,
                         **self._acqkw)
          
-        if not self.space.validate_conf(x_max) :
-            x_max = self.space.rechoose_conf(x_max)
+        
+        #---------!!!!!!!!!!-----!!!!!!-----hadoop environment
+        #if not self.space.validate_conf(x_max) :
+        #    x_max = self.space.rechoose_conf(x_max)
+        
+        
+        
         # Print new header
         if self.verbose:
             self.plog.print_header(initialization=False)
@@ -308,8 +319,11 @@ class BayesianOptimization(object):
                             bounds=self.space.bounds,
                             random_state=self.random_state,
                             **self._acqkw)
-            if not self.space.validate_conf(x_max) :
-                x_max = self.space.rechoose_conf(x_max)
+            
+            #-----------!!!!!!!!!----------
+            #if not self.space.validate_conf(x_max) :
+            #   x_max = self.space.rechoose_conf(x_max)
+             
             # Keep track of total number of iterations
             self.i += 1
 
