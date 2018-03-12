@@ -22,7 +22,9 @@ def better_conf(x,y):
     print("(2)\n")
     print(y)
     result = input()
-    return True if result == '1' else False
+    if str(result) == '1':
+        return x
+    return y
     
 
 def config_filter(x,y):
@@ -56,8 +58,9 @@ def do_filter(xlist):
     for i in range(len(xlist)-1,0,-1):
         if i < len(xlist) -10 and i <0:
             break
-        if not better_conf(result, xlist[i][1]):
-            result = xlist[i][1]
+        result = better_conf(result, xlist[i][1])
+        print("better config is")
+        print(result)
     return result
         
     
@@ -131,7 +134,11 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     # Clip output to make sure it lies within the bounds. Due to floating
     # x_maxdict contains morethan
     x_max = do_filter(x_dict)
-    return np.clip(x_max, bounds[:, 0], bounds[:, 1])
+    print("After compare 10 configuration")
+    lastResult = np.clip(x_max, bounds[:, 0], bounds[:, 1])
+    print("temp Max is")
+    print(lastResult)
+    return lastResult
 
 
 class UtilityFunction(object):

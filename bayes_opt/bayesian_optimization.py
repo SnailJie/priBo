@@ -83,7 +83,7 @@ class BayesianOptimization(object):
         # points from self.explore method.
         
         rand_points = self.space.random_points(init_points)
-        rand_points = self.space.get_new_init(rand_points)
+        rand_points = self.space.get_new_init(rand_points)   #set init points as the same
         
         print("new rand_points is")
         print(rand_points)
@@ -290,6 +290,7 @@ class BayesianOptimization(object):
             # If it is repeated, print a warning
             pwarning = False
             while x_max in self.space:
+                print("Change X_MAX")
                 x_max = self.space.random_points(1)[0]
                 pwarning = True
 
