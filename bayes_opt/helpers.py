@@ -102,18 +102,12 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
     x_tries =  np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_warmup, bounds.shape[0])))
     ys = ac(x_tries, gp=gp, y_max=y_max)
-    x_dict= config_filter(x_tries,ys)
-    #x_max = x_tries[ys.argmax()]
-    #max_acq = ys.max()
-    #max_acq = ys[x_index]
-    xitems = x_dict.items()
-    #sorted(xitems)
-    max_acq = sorted(xitems)[0][0]
+    x_max = x_tries[ys.argmax()]
+    max_acq = ys.max()
 
     # Explore the parameter space more throughly
     x_seeds = np.around(random_state.uniform(bounds[:, 0], bounds[:, 1],
                                    size=(n_iter, bounds.shape[0])))
-     
     for x_try in x_seeds:
         # Find the minimum of minus the acquisition function
         res = minimize(lambda x: -ac(x.reshape(1, -1), gp=gp, y_max=y_max),
@@ -123,15 +117,15 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=100000, n_iter=250):
         
         # Store it if better than previous minimum(maximum).
         if max_acq is None or -res.fun[0] <= max_acq:
-            #x_max = np.around(res.x)
-            x_dict[-res.fun[0]] = x_try 
+            x_max = np.around(res.x)
             max_acq = -res.fun[0]
             
 
     # Clip output to make sure it lies within the bounds. Due to floating
-    # x_maxdict contains morethan
-    x_max = do_filter(x_dict)
+    # point technicalities this is not always the case.
+    
     return np.clip(x_max, bounds[:, 0], bounds[:, 1])
+
 
 
 class UtilityFunction(object):

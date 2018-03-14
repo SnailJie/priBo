@@ -1,4 +1,5 @@
 .ipynb_checkpoints
+priBO*
 *.pyc
 *.egg-info/
 build/
@@ -22,3 +23,4 @@ coverage.xml
 
 #test file
 priBo.ipynb
+
